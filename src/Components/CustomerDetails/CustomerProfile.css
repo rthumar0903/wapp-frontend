@@ -1,0 +1,10 @@
+.user-block {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.customer-title {
+  margin-top: 180px;
+}

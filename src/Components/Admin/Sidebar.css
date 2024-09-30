@@ -1,0 +1,60 @@
+.side-panel-wrapper {
+  background: rebeccapurple;
+  height: 100vh;
+  padding: 0 10px;
+}
+
+.side-panel-wrapper .company-logo-name {
+  height: 70px;
+  font-size: 30px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin-bottom: 130px;
+}
+
+.side-panel-wrapper .company-logo-name .company-logo {
+  width: 70px;
+  display: flex;
+  justify-content: center;
+}
+
+.side-panel-wrapper .company-logo-name .company-name {
+  display: none;
+}
+
+.side-panel-wrapper .side-panel-item a {
+  display: flex;
+  column-gap: 5px;
+  color: black;
+  text-decoration: none;
+  justify-content: center;
+}
+
+.side-panel-wrapper .side-panel-item a:hover {
+  color: white;
+  transition: color 0.5s ease-out;
+}
+
+.side-panel-wrapper .side-panel-item .side-panel-item-icon {
+  width: 60px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 35px;
+}
+
+.side-panel-wrapper .side-panel-item .side-panel-item-icon.active-item {
+  border-radius: 50%;
+  color: white;
+  background: #985ed3;
+}
+
+.side-panel-wrapper .side-panel-item .side-panel-item-title {
+  display: flex;
+  align-items: center;
+  font-size: 25px;
+  font-weight: 600;
+  display: none;
+}
