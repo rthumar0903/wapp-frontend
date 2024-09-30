@@ -49,6 +49,7 @@ const Login = () => {
         localStorage.setItem("role", role);
         if (role === "Customer") navigate("/customer-details/profile");
         else if (role === "Agent") navigate("/agent/order");
+        else if (role === "Admin") navigate("/admin/order");
       }
       console.log("---", login);
     } catch (ex) {
