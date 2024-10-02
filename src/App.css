@@ -1,9 +1,9 @@
 @import "primereact/resources/themes/md-light-deeppurple/theme.css"
   layer(primeReact);
 @import "bootstrap/dist/css/bootstrap.css" layer(bootstrap);
-.App {
+/* .App {
   text-align: center;
-}
+} */
 
 .App-logo {
   height: 40vmin;
