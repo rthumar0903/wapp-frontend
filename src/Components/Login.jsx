@@ -279,7 +279,7 @@ export default function Login() {
           <img src={i0} alt="" />
           <img src={i1} alt="" />
           <img src={i2} alt="" />
-          <h1>Login to new Era of social media</h1>
+          <h1>Login to Pharmaone</h1>
         </div>
         <div className="Login_container">
           <di className="Login_all">

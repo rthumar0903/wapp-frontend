@@ -1,0 +1,14 @@
+.customer-block {
+  margin: auto;
+  padding: 0 50px;
+  width: 100%;
+}
+
+.customer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  /* margin-right: 100px; */
+  margin-bottom: 50px;
+}

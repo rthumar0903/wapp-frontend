@@ -55,48 +55,48 @@ export default function Order() {
   }, []);
 
   return (
-    <div className="p-fluid">
-      <h2 className="order-title">Order Details</h2>
-      <div className="order-table">
-        <DataTable value={agnetDetails} tableStyle={{ minWidth: "50rem" }}>
-          <Column
-            field="name"
-            header="Name"
-            sortable
-            style={{ width: "10%" }}
-          ></Column>
-          <Column
-            field="pincode"
-            header="Pincode"
-            sortable
-            style={{ width: "5%" }}
-          ></Column>
-          <Column
-            field="address"
-            header="Address"
-            sortable
-            style={{ width: "25%" }}
-          ></Column>
-          <Column
-            field="status"
-            header="Status"
-            sortable
-            style={{ width: "10%" }}
-          ></Column>
-          <Column
-            field="media"
-            header="Media"
-            sortable
-            style={{ width: "25%" }}
-          ></Column>
-          <Column
-            field="time"
-            header="Time"
-            sortable
-            style={{ width: "25%" }}
-          ></Column>
-        </DataTable>
+    <div className="order-block">
+      <div className="order-header">
+        <h2>Order Details</h2>
       </div>
+      <DataTable value={agnetDetails} className="order-table">
+        <Column
+          field="name"
+          header="Name"
+          sortable
+          style={{ width: "10%" }}
+        ></Column>
+        <Column
+          field="pincode"
+          header="Pincode"
+          sortable
+          style={{ width: "5%" }}
+        ></Column>
+        <Column
+          field="address"
+          header="Address"
+          sortable
+          style={{ width: "25%" }}
+        ></Column>
+        <Column
+          field="status"
+          header="Status"
+          sortable
+          style={{ width: "10%" }}
+        ></Column>
+        <Column
+          field="media"
+          header="Media"
+          sortable
+          style={{ width: "25%" }}
+        ></Column>
+        <Column
+          field="time"
+          header="Time"
+          sortable
+          style={{ width: "25%" }}
+        ></Column>
+      </DataTable>
     </div>
   );
 }

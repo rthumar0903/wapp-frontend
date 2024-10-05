@@ -20,7 +20,8 @@ export default function AgentAdmin() {
   ]);
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState("");
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  // const [selectedCity, setSelectedCity] = useState(null);
   const cities = [
     { name: "New York", code: "NY" },
     { name: "Rome", code: "RM" },
@@ -49,6 +50,31 @@ export default function AgentAdmin() {
     }
   };
 
+  const addAgent = async () => {
+    try {
+      console.log("name,phone", name, phoneNumber);
+      const res = await axios({
+        method: "POST",
+        url: `http://localhost:8000/agents`,
+        data: {
+          phoneNumber,
+          name,
+        },
+      });
+      if (res.status === 200) {
+        const customers = res?.data;
+        setAgentDetails(
+          customers.map((customer) => ({
+            name: customer?.name,
+            phoneNumber: customer?.phone_number,
+          }))
+        );
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
+
   useEffect(() => {
     getAgentDetails();
   }, []);
@@ -61,7 +87,7 @@ export default function AgentAdmin() {
       </div>
       {/* <Button label="Add Agnet" /> */}
       <div>
-        <DataTable value={agnetDetails}>
+        <DataTable value={agnetDetails} className="table-block">
           <Column
             field="name"
             header="Name"
@@ -78,45 +104,49 @@ export default function AgentAdmin() {
         <Dialog
           header="Add Agent"
           visible={visible}
-          style={{ width: "50vw", height: "500px" }}
+          style={{ maxWidth: "450px", width: "90%" }}
           onHide={() => {
             if (!visible) return;
             setVisible(false);
           }}
         >
-          <div>
+          <div className="agent-form">
             <div>
               <FloatLabel>
                 <InputText
                   id="username"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className="agent-input"
                 />
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Name</label>
               </FloatLabel>
-            </div>{" "}
+            </div>
             <div>
               <FloatLabel>
                 <InputText
                   id="username"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="agent-input"
                 />
                 <label htmlFor="username">Phone Number</label>
               </FloatLabel>
             </div>
-            <div>
+            {/* <div>
               <Dropdown
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.value)}
                 options={cities}
                 optionLabel="name"
                 placeholder="Select a City"
-                className="w-full md:w-14rem"
+                // className="w-full md:w-14rem"
+                className="agent-input"
                 checkmark={true}
                 highlightOnSelect={false}
               />
-            </div>
+            </div> */}
+            <Button onClick={addAgent}>Submit</Button>
           </div>
         </Dialog>
       </div>

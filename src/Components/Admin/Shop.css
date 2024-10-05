@@ -1,0 +1,46 @@
+.shop-block {
+  margin: auto;
+  /* max-width: 1200px; */
+  padding: 0 50px;
+  /* width: 100%; */
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  /* margin-right: 100px; */
+  margin-bottom: 50px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.shop-input {
+  width: 250px;
+}
+
+.shop-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.shop-blocks {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.shop {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

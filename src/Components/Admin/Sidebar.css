@@ -1,16 +1,22 @@
 .side-panel-wrapper {
   background: rebeccapurple;
   height: 100vh;
-  padding: 0 10px;
+  padding: 10px 15px 10px 10px;
 }
 
 .side-panel-wrapper .company-logo-name {
   height: 70px;
   font-size: 30px;
+  margin-top: 20px;
   font-weight: 700;
+  gap: 10px;
   display: flex;
   align-items: center;
   margin-bottom: 130px;
+}
+
+.company-title {
+  margin: 0;
 }
 
 .side-panel-wrapper .company-logo-name .company-logo {
@@ -31,18 +37,22 @@
   justify-content: center;
 }
 
+.side-panel-wrapper .side-panel-item {
+  display: flex;
+  align-items: center;
+}
+
 .side-panel-wrapper .side-panel-item a:hover {
   color: white;
   transition: color 0.5s ease-out;
 }
 
 .side-panel-wrapper .side-panel-item .side-panel-item-icon {
-  width: 60px;
+  height: 40px;
   aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 35px;
 }
 
 .side-panel-wrapper .side-panel-item .side-panel-item-icon.active-item {
@@ -57,4 +67,15 @@
   font-size: 25px;
   font-weight: 600;
   display: none;
+}
+
+.side-panel-wrapper .side-panel-item .side-panel-item-icon svg {
+  height: 100%;
+  width: 100%;
+}
+
+.item-title {
+  font-size: 20px;
+  font-weight: 700;
+  align-items: center;
 }

@@ -6,7 +6,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import "./Order.css";
+import "./Customer.css";
 export default function Customer() {
   const [agnetDetails, setAgentDetails] = useState([
     {
@@ -44,36 +44,36 @@ export default function Customer() {
   }, []);
 
   return (
-    <div className="p-fluid">
-      <h2 className="order-title">Customers Details</h2>
-      <div className="order-table">
-        <DataTable value={agnetDetails} tableStyle={{ minWidth: "50rem" }}>
-          <Column
-            field="name"
-            header="Name"
-            sortable
-            style={{ width: "10%" }}
-          ></Column>
-          <Column
-            field="pincode"
-            header="Pincode"
-            sortable
-            style={{ width: "5%" }}
-          ></Column>
-          <Column
-            field="address"
-            header="Address"
-            sortable
-            style={{ width: "25%" }}
-          ></Column>
-          <Column
-            field="phoneNumber"
-            header="Phone no."
-            sortable
-            style={{ width: "10%" }}
-          ></Column>
-        </DataTable>
+    <div className="customer-block">
+      <div className="customer-header">
+        <h2>Customers Details</h2>
       </div>
+      <DataTable value={agnetDetails}>
+        <Column
+          field="name"
+          header="Name"
+          sortable
+          style={{ width: "10%" }}
+        ></Column>
+        <Column
+          field="pincode"
+          header="Pincode"
+          sortable
+          style={{ width: "5%" }}
+        ></Column>
+        <Column
+          field="address"
+          header="Address"
+          sortable
+          style={{ width: "25%" }}
+        ></Column>
+        <Column
+          field="phoneNumber"
+          header="Phone no."
+          sortable
+          style={{ width: "10%" }}
+        ></Column>
+      </DataTable>
     </div>
   );
 }
