@@ -12,13 +12,18 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
 import { RadioButton } from "primereact/radiobutton";
+import { Dropdown } from "primereact/dropdown";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Shop() {
   const [visible, setVisible] = useState(false);
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isFullTime, setIsFullTime] = useState(null);
+  // const [name, setName] = useState("");
+  // const [phoneNumber, setPhoneNumber] = useState("");
+  // const [isFullTime, setIsFullTime] = useState(null);
   const [shopsDetails, setShopsDetails] = useState([
     {
+      id: "",
       shopName: "",
       shopCode: "",
       shopAddress: "",
@@ -26,6 +31,8 @@ export default function Shop() {
       phoneNumber: "",
       openTime: "",
       closeTime: "",
+      isFullTime: null,
+      agentId: "",
     },
   ]);
   const [newShop, setNewShop] = useState({
@@ -37,7 +44,35 @@ export default function Shop() {
     openTime: "",
     closeTime: "",
     isFullTime: null,
+    agentId: "",
+    agentName: "",
   });
+
+  const [agnetDetails, setAgentDetails] = useState([
+    {
+      id: "",
+      name: "",
+      phoneNumber: "",
+    },
+  ]);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [selectedAgentId, setSelectedAgentId] = useState(null);
+  const getAgentDetails = async (agentId) => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `http://localhost:8000/agents/${agentId}`,
+      });
+      if (res.status === 200) {
+        setNewShop((prevShop) => ({
+          ...prevShop,
+          agentName: res?.data?.name,
+        }));
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
   const getShopsDetails = async (agentId) => {
     try {
       const res = await axios({
@@ -48,6 +83,7 @@ export default function Shop() {
         const customers = res?.data;
         setShopsDetails(
           customers.map((shop) => ({
+            id: shop?.id,
             shopName: shop.shop_name,
             shopCode: shop.shop_code,
             shopAddress: shop.shop_address,
@@ -55,6 +91,8 @@ export default function Shop() {
             phoneNumber: shop.phone_number,
             openTime: shop.open_time,
             closeTime: shop.close_time,
+            isFullTime: shop.is_full_time === 1,
+            agentId: shop.agent_id,
           }))
         );
       }
@@ -62,7 +100,45 @@ export default function Shop() {
       console.error(ex);
     }
   };
-
+  const handleEditForm = async (rawData) => {
+    console.log("raw", rawData);
+    getAgentDetails(rawData?.agentId);
+    setNewShop((prevShop) => ({
+      ...prevShop,
+      shopName: rawData?.shopName,
+      shopCode: rawData?.shopCode,
+      shopAddress: rawData?.shopAddress,
+      pinCode: rawData?.pincode,
+      phoneNumber: rawData?.phoneNumber,
+      openTime: rawData?.openTime,
+      closeTime: rawData?.closeTime,
+      isFullTime: rawData?.isFullTime,
+      agentId: rawData?.id,
+      // agentName:rawData?.
+    }));
+    openDialog();
+    // setVisible(true);
+  };
+  const getAgentsDetails = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `http://localhost:8000/agents`,
+      });
+      if (res.status === 200) {
+        const agents = res?.data;
+        setAgentDetails(
+          agents.map((agent) => ({
+            name: agent?.name,
+            phoneNumber: agent?.phone_number,
+            id: agent?.id,
+          }))
+        );
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
   const addShop = async () => {
     try {
       console.log("shop Details", newShop);
@@ -72,9 +148,22 @@ export default function Shop() {
         url: `http://localhost:8000/shops`,
         data: newShop,
       });
-      if (res.status === 200) {
-        const customers = res?.data;
-        console.log(res.data);
+      if (res.status === 201) {
+        setNewShop((prevShop) => ({
+          ...prevShop,
+          shopName: "",
+          shopCode: "",
+          shopAddress: "",
+          pinCode: "",
+          phoneNumber: "",
+          openTime: "",
+          closeTime: "",
+          isFullTime: null,
+          agentId: "",
+        }));
+        getShopsDetails();
+        setVisible(false);
+        toast.success("Shop added successfully");
       }
     } catch (ex) {
       console.error(ex);
@@ -136,17 +225,58 @@ export default function Shop() {
     }));
   };
 
+  const handleAgentSelect = (e) => {
+    // console.log(e.target.value?.name);
+    // setSelectedAgentId(e?.value?.id);
+    setNewShop((prevShop) => ({
+      ...prevShop,
+      agentId: e.value?.id,
+      agentName: e.value,
+    }));
+    // setSelectedAgent(e?.value);
+  };
+
+  const openDialog = () => {
+    setVisible(true);
+    getAgentsDetails();
+  };
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button
+          icon="pi pi-pencil"
+          rounded
+          outlined
+          className="mr-2"
+          onClick={() => handleEditForm(rowData)}
+        />
+        {/* <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
+          onClick={() => confirmDeleteProduct(rowData)}
+        /> */}
+      </React.Fragment>
+    );
+  };
   useEffect(() => {
     getShopsDetails();
   }, []);
 
   return (
     <div className="shop-block">
+      <ToastContainer />
       <div className="shop-header">
         <h2>Shop Details</h2>
-        <Button label="Add Shop" onClick={() => setVisible(true)} />
+        <Button label="Add Shop" onClick={openDialog} />
       </div>
-      <DataTable value={shopsDetails} tableStyle={{ minWidth: "50rem" }}>
+      <DataTable
+        value={shopsDetails}
+        tableStyle={{ minWidth: "50rem" }}
+        editMode="row"
+        dataKey="id"
+      >
         <Column
           field="shopName"
           header="Shop Name"
@@ -187,6 +317,12 @@ export default function Shop() {
           field="closeTime"
           header="Close time"
           sortable
+          style={{ width: "10%" }}
+        ></Column>
+        <Column
+          header="Action"
+          body={actionBodyTemplate}
+          exportable={false}
           style={{ width: "10%" }}
         ></Column>
       </DataTable>
@@ -304,20 +440,20 @@ export default function Shop() {
                   <label htmlFor="username">Close Time</label>
                 </FloatLabel>
               </div>
+              <div>
+                <Dropdown
+                  value={newShop?.agentName}
+                  onChange={handleAgentSelect}
+                  options={agnetDetails}
+                  optionLabel="name"
+                  placeholder="Select a Agent"
+                  // className="w-full md:w-14rem"
+                  className="agent-input"
+                  checkmark={true}
+                  highlightOnSelect={false}
+                />
+              </div>
             </div>
-            {/* <div>
-              <Dropdown
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.value)}
-                options={cities}
-                optionLabel="name"
-                placeholder="Select a City"
-                // className="w-full md:w-14rem"
-                className="agent-input"
-                checkmark={true}
-                highlightOnSelect={false}
-              />
-            </div> */}
           </div>
           <div>
             <Button onClick={addShop} className="shop-button">

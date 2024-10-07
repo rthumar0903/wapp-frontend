@@ -11,6 +11,9 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function AgentAdmin() {
   const [agnetDetails, setAgentDetails] = useState([
     {
@@ -22,13 +25,6 @@ export default function AgentAdmin() {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   // const [selectedCity, setSelectedCity] = useState(null);
-  const cities = [
-    { name: "New York", code: "NY" },
-    { name: "Rome", code: "RM" },
-    { name: "London", code: "LDN" },
-    { name: "Istanbul", code: "IST" },
-    { name: "Paris", code: "PRS" },
-  ];
 
   const getAgentDetails = async (agentId) => {
     try {
@@ -61,14 +57,12 @@ export default function AgentAdmin() {
           name,
         },
       });
-      if (res.status === 200) {
-        const customers = res?.data;
-        setAgentDetails(
-          customers.map((customer) => ({
-            name: customer?.name,
-            phoneNumber: customer?.phone_number,
-          }))
-        );
+      if (res.status === 201) {
+        getAgentDetails();
+        setName(null);
+        setPhoneNumber(null);
+        setVisible(false);
+        toast.success("Agent Added successfully");
       }
     } catch (ex) {
       console.error(ex);
@@ -81,6 +75,7 @@ export default function AgentAdmin() {
 
   return (
     <div className="agent-block">
+      <ToastContainer />
       <div className="agent-header">
         <h2>Agents Details</h2>
         <Button label="Add Agent" onClick={() => setVisible(true)} />
