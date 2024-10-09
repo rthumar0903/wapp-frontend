@@ -19,11 +19,14 @@ export default function AgentAdmin() {
     {
       name: "",
       phoneNumber: "",
+      id: "",
     },
   ]);
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState("");
+  const [agentId, setAgentId] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
   // const [selectedCity, setSelectedCity] = useState(null);
 
   const getAgentDetails = async (agentId) => {
@@ -33,13 +36,37 @@ export default function AgentAdmin() {
         url: `http://localhost:8000/agents`,
       });
       if (res.status === 200) {
-        const customers = res?.data;
+        const agents = res?.data;
         setAgentDetails(
-          customers.map((customer) => ({
-            name: customer?.name,
-            phoneNumber: customer?.phone_number,
+          agents.map((agent) => ({
+            name: agent?.name,
+            phoneNumber: agent?.phone_number,
+            id: agent?.id,
           }))
         );
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
+
+  const editAgent = async () => {
+    try {
+      console.log("name,phone", name, phoneNumber);
+      const res = await axios({
+        method: "PUT",
+        url: `http://localhost:8000/agents/${agentId}`,
+        data: {
+          phoneNumber,
+          name,
+        },
+      });
+      if (res.status === 201) {
+        getAgentDetails();
+        setName(null);
+        setPhoneNumber(null);
+        setVisible(false);
+        toast.success("Agent Edit successfully");
       }
     } catch (ex) {
       console.error(ex);
@@ -69,6 +96,56 @@ export default function AgentAdmin() {
     }
   };
 
+  const handleEditForm = async (rawData) => {
+    console.log("raw", rawData);
+    setIsEdit(true);
+    setPhoneNumber(rawData?.phoneNumber);
+    setName(rawData?.name);
+    setAgentId(rawData?.id);
+    // const agentDetails = await getAgentDetails(rawData?.agentId);
+    // const agentDetail = {
+    //   id: agentDetails?.id,
+    //   name: agentDetails?.name,
+    //   phoneNumber: agentDetails?.phone_number,
+    // };
+    // console.log("inside", agentDetail);
+    // setNewShop((prevShop) => ({
+    //   ...prevShop,
+    //   shopName: rawData?.shopName,
+    //   shopCode: rawData?.shopCode,
+    //   shopAddress: rawData?.shopAddress,
+    //   pinCode: rawData?.pincode,
+    //   phoneNumber: rawData?.phoneNumber,
+    //   openTime: rawData?.openTime,
+    //   closeTime: rawData?.closeTime,
+    //   isFullTime: rawData?.isFullTime,
+    //   agentId: rawData?.id,
+    //   name: agentDetail,
+    // }));
+    // openDialog();
+    setVisible(true);
+  };
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button
+          icon="pi pi-pencil"
+          rounded
+          outlined
+          className="mr-2"
+          onClick={() => handleEditForm(rowData)}
+        />
+        {/* <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
+          onClick={() => confirmDeleteProduct(rowData)}
+        /> */}
+      </React.Fragment>
+    );
+  };
+
   useEffect(() => {
     getAgentDetails();
   }, []);
@@ -95,14 +172,21 @@ export default function AgentAdmin() {
             sortable
             style={{ width: "5%" }}
           ></Column>
+          <Column
+            header="Action"
+            body={actionBodyTemplate}
+            exportable={false}
+            style={{ width: "10%" }}
+          ></Column>
         </DataTable>
         <Dialog
-          header="Add Agent"
+          header={isEdit ? "Edit Agent" : "Add Agent"}
           visible={visible}
           style={{ maxWidth: "450px", width: "90%" }}
           onHide={() => {
             if (!visible) return;
             setVisible(false);
+            setIsEdit(false);
           }}
         >
           <div className="agent-form">
@@ -141,7 +225,11 @@ export default function AgentAdmin() {
                 highlightOnSelect={false}
               />
             </div> */}
-            <Button onClick={addAgent}>Submit</Button>
+            {isEdit ? (
+              <Button onClick={editAgent}>Edit</Button>
+            ) : (
+              <Button onClick={addAgent}>Submit</Button>
+            )}
           </div>
         </Dialog>
       </div>

@@ -7,6 +7,9 @@ import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import "./OrderDetails.css";
+import { Button } from "primereact/button";
+// import fs from "fs";
+
 export default function OrderDetails() {
   const [agnetDetails, setAgentDetails] = useState([
     {
@@ -47,6 +50,39 @@ export default function OrderDetails() {
     } catch (ex) {
       console.error(ex);
     }
+  };
+
+  const redirectToImage = async () => {
+    try {
+      const agent = await axios({
+        method: "GET",
+        url: `http://localhost:8000/getImage`,
+      });
+      // if (agent.status === 200) {
+      // }
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button
+          icon="pi pi-pencil"
+          rounded
+          outlined
+          className="mr-2"
+          onClick={() => redirectToImage()}
+        />
+        {/* <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
+          onClick={() => confirmDeleteProduct(rowData)}
+        /> */}
+      </React.Fragment>
+    );
   };
 
   useEffect(() => {
@@ -94,6 +130,12 @@ export default function OrderDetails() {
             header="Time"
             sortable
             style={{ width: "25%" }}
+          ></Column>
+          <Column
+            header="Action"
+            body={actionBodyTemplate}
+            exportable={false}
+            style={{ width: "10%" }}
           ></Column>
         </DataTable>
       </div>

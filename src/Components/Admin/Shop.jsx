@@ -45,7 +45,7 @@ export default function Shop() {
     closeTime: "",
     isFullTime: null,
     agentId: "",
-    agentName: "",
+    name: "",
   });
 
   const [agnetDetails, setAgentDetails] = useState([
@@ -57,6 +57,7 @@ export default function Shop() {
   ]);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [selectedAgentId, setSelectedAgentId] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
   const getAgentDetails = async (agentId) => {
     try {
       const res = await axios({
@@ -64,10 +65,7 @@ export default function Shop() {
         url: `http://localhost:8000/agents/${agentId}`,
       });
       if (res.status === 200) {
-        setNewShop((prevShop) => ({
-          ...prevShop,
-          agentName: res?.data?.name,
-        }));
+        return res?.data;
       }
     } catch (ex) {
       console.error(ex);
@@ -101,8 +99,15 @@ export default function Shop() {
     }
   };
   const handleEditForm = async (rawData) => {
-    console.log("raw", rawData);
-    getAgentDetails(rawData?.agentId);
+    // console.log("raw", rawData);
+    setIsEdit(true);
+    const agentDetails = await getAgentDetails(rawData?.agentId);
+    const agentDetail = {
+      id: agentDetails?.id,
+      name: agentDetails?.name,
+      phoneNumber: agentDetails?.phone_number,
+    };
+    console.log("inside", agentDetail);
     setNewShop((prevShop) => ({
       ...prevShop,
       shopName: rawData?.shopName,
@@ -114,10 +119,9 @@ export default function Shop() {
       closeTime: rawData?.closeTime,
       isFullTime: rawData?.isFullTime,
       agentId: rawData?.id,
-      // agentName:rawData?.
+      name: agentDetail,
     }));
     openDialog();
-    // setVisible(true);
   };
   const getAgentsDetails = async () => {
     try {
@@ -139,13 +143,43 @@ export default function Shop() {
       console.error(ex);
     }
   };
+
   const addShop = async () => {
     try {
       console.log("shop Details", newShop);
-
       const res = await axios({
         method: "POST",
         url: `http://localhost:8000/shops`,
+        data: newShop,
+      });
+      if (res.status === 201) {
+        setNewShop((prevShop) => ({
+          ...prevShop,
+          shopName: "",
+          shopCode: "",
+          shopAddress: "",
+          pinCode: "",
+          phoneNumber: "",
+          openTime: "",
+          closeTime: "",
+          isFullTime: null,
+          agentId: "",
+        }));
+        getShopsDetails();
+        setVisible(false);
+        toast.success("Shop added successfully");
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
+
+  const editShop = async () => {
+    try {
+      console.log("shop Details", newShop);
+      const res = await axios({
+        method: "PUT",
+        url: `http://localhost:8000/shops/${newShop?.agentId}`,
         data: newShop,
       });
       if (res.status === 201) {
@@ -189,7 +223,6 @@ export default function Shop() {
       shopAddress: e.target.value,
     }));
   };
-
   const handlePincode = (e) => {
     setNewShop((prevShop) => ({
       ...prevShop,
@@ -327,12 +360,13 @@ export default function Shop() {
         ></Column>
       </DataTable>
       <Dialog
-        header="Add Shop"
+        header={isEdit ? "Edit Shop" : "Add Shop"}
         visible={visible}
         style={{ maxWidth: "700px", width: "90%" }}
         onHide={() => {
           if (!visible) return;
           setVisible(false);
+          setIsEdit(false);
         }}
       >
         <div className="shop">
@@ -442,7 +476,7 @@ export default function Shop() {
               </div>
               <div>
                 <Dropdown
-                  value={newShop?.agentName}
+                  value={newShop?.name}
                   onChange={handleAgentSelect}
                   options={agnetDetails}
                   optionLabel="name"
@@ -456,9 +490,15 @@ export default function Shop() {
             </div>
           </div>
           <div>
-            <Button onClick={addShop} className="shop-button">
-              Add
-            </Button>
+            {isEdit ? (
+              <Button onClick={editShop} className="shop-button">
+                Edit
+              </Button>
+            ) : (
+              <Button onClick={addShop} className="shop-button">
+                Add
+              </Button>
+            )}
           </div>
         </div>
       </Dialog>

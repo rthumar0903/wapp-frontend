@@ -35,10 +35,10 @@ function App() {
               path="/login"
               element={<Login setLoggedIn={setLoggedIn} setEmail={setEmail} />}
             />
-            <Route path="/customer-details" element={<CustomerDetails />}>
+            {/* <Route path="/customer-details" element={<CustomerDetails />}>
               <Route path="profile" element={<CustomerProfile />} />
               <Route path="attachment" element={<CustomerAttachment />} />
-            </Route>
+            </Route> */}
             <Route path="/agent" element={<Agent />}>
               <Route path="order" element={<OrderDetails />} />
               <Route path="attachment" element={<CustomerAttachment />} />
