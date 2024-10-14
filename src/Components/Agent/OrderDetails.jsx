@@ -8,7 +8,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import "./OrderDetails.css";
 import { Button } from "primereact/button";
-// import fs from "fs";
+// import fetch from "cross-fetch";
 
 export default function OrderDetails() {
   const [agnetDetails, setAgentDetails] = useState([
@@ -54,15 +54,62 @@ export default function OrderDetails() {
 
   const redirectToImage = async () => {
     try {
-      const agent = await axios({
-        method: "GET",
-        url: `http://localhost:8000/getImage`,
+      const token =
+        "EAAL8U6Q18bYBO0CbwqDNMfoKgdrC8knRAMhgwlzSvzJD4pZBhaFvABn45pMJEI9kHvXhezW9TA1bYfIox8lwzlHRIXJs1TLHyhKjRgoi3iMSvTzLGZBzmiEX4lnV6ep9LforfANYXjQMeXmHLguJvSLZBvZBmv3a9Q9hMeWQXCbSYhncx8BcxNRE5jGIA7Xbr4CDjMNnRK9zlpWDcqz0wqx7VDJewtH804jZC";
+      const URL =
+        "https://lookaside.fbsbx.com/whatsapp_business/attachments/?mid=1206148197308460&ext=1728493701&hash=ATuY_vtQO40JeBq6u0xeRLg8-fyUVswt9xJqVLKk6nBVIw";
+      const mediaMimeType = "image/jpeg";
+      const response = await axios.get(URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": mediaMimeType,
+        },
+        responseType: "arraybuffer", // This is important for binary data
       });
-      // if (agent.status === 200) {
-      // }
+      if (mediaMimeType.startsWith("image/")) {
+        const filename = "temp";
+        const file_extension = filename + "." + mediaMimeType.split("/")[1];
+        const typeoffile = mediaMimeType.split("/")[0];
+
+        const somedata = Buffer.from(response.data, "binary");
+        const bufferArray = new Uint8Array(somedata).buffer;
+        const blob = new Blob([bufferArray], {
+          type: "image/jpeg",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        console.log("url == = = = = ", url);
+        // await fs.writeFileSync(
+        //   file_extension,
+        //   Buffer.from(response.data, "binary")
+        // );
+
+        console.log(`Media saved to ${file_extension} successfully.`);
+      }
     } catch (ex) {
-      console.error(ex);
+      console.log(ex);
     }
+
+    // try {
+    //   fetch(
+    //     "https://lookaside.fbsbx.com/whatsapp_business/attachments/?mid=1206148197308460&ext=1728491571&hash=ATv4stRKzExrOzC-El5jhnehMfrGKZ8NTVIU1vnLv5P34Q",
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer EAAL8U6Q18bYBO0CbwqDNMfoKgdrC8knRAMhgwlzSvzJD4pZBhaFvABn45pMJEI9kHvXhezW9TA1bYfIox8lwzlHRIXJs1TLHyhKjRgoi3iMSvTzLGZBzmiEX4lnV6ep9LforfANYXjQMeXmHLguJvSLZBvZBmv3a9Q9hMeWQXCbSYhncx8BcxNRE5jGIA7Xbr4CDjMNnRK9zlpWDcqz0wqx7VDJewtH804jZC`,
+    //         "User-Agent": "node",
+    //       },
+    //     }
+    //   );
+    // const agent = await axios({
+    //   method: "GET",
+    //   url: `http://localhost:8000/getImage`,
+    // });
+    // if (agent.status === 200) {
+    // }
+    // } catch (ex) {
+    //   console.error(ex);
+    // }
   };
   const actionBodyTemplate = (rowData) => {
     return (
