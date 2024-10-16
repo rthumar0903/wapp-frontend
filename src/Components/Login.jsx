@@ -175,7 +175,7 @@ export default function Login() {
         },
       });
       if (res.status === 200) {
-        login("dummyToken");
+        login(res?.data?.token);
         console.log("id = ", res);
         localStorage.setItem("userId", res?.data?.data?.id);
         const role = res?.data?.data?.role;

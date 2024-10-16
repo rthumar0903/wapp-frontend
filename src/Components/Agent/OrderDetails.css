@@ -1,7 +1,24 @@
-.order-table {
+/* .order-table {
   margin-top: 50px;
+  margin-left: 50px;
+} */
+
+/* .order-title {
+  margin-top: 130px;
+} */
+
+.order-block {
+  margin: auto;
+  padding: 0 50px;
+  /* max-width: 1200px; */
+  width: 100%;
 }
 
-.order-title {
-  margin-top: 130px;
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  /* margin-right: 100px; */
+  margin-bottom: 50px;
 }

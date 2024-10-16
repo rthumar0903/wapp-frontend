@@ -27,6 +27,7 @@ export default function AgentAdmin() {
   const [agentId, setAgentId] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+  const token = localStorage.getItem("token");
   // const [selectedCity, setSelectedCity] = useState(null);
 
   const getAgentDetails = async (agentId) => {
@@ -34,6 +35,9 @@ export default function AgentAdmin() {
       const res = await axios({
         method: "GET",
         url: `http://localhost:8000/agents`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.status === 200) {
         const agents = res?.data;
