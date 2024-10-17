@@ -16,12 +16,15 @@ export default function Customer() {
       phoneNumber: "",
     },
   ]);
-
+  const token = localStorage.getItem("token");
   const getCustomersDetails = async (agentId) => {
     try {
       const res = await axios({
         method: "GET",
         url: `http://localhost:8000/customers`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.status === 200) {
         const customers = res?.data;

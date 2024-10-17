@@ -58,6 +58,7 @@ export default function Shop() {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [selectedAgentId, setSelectedAgentId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const token = localStorage.getItem("token");
   const getAgentDetails = async (agentId) => {
     try {
       const res = await axios({
@@ -76,6 +77,9 @@ export default function Shop() {
       const res = await axios({
         method: "GET",
         url: `http://localhost:8000/shops`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.status === 200) {
         const customers = res?.data;
@@ -128,6 +132,9 @@ export default function Shop() {
       const res = await axios({
         method: "GET",
         url: `http://localhost:8000/agents`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.status === 200) {
         const agents = res?.data;
@@ -150,6 +157,9 @@ export default function Shop() {
       const res = await axios({
         method: "POST",
         url: `http://localhost:8000/shops`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         data: newShop,
       });
       if (res.status === 201) {
@@ -180,6 +190,9 @@ export default function Shop() {
       const res = await axios({
         method: "PUT",
         url: `http://localhost:8000/shops/${newShop?.agentId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         data: newShop,
       });
       if (res.status === 201) {

@@ -22,7 +22,7 @@ export default function Order() {
   ]);
   const [selectedImageUrl, setSelectedImageUrl] = useState(null); // State for the selected image URL
   const [isDialogVisible, setIsDialogVisible] = useState(false); // State to manage Dialog visibility
-
+  const token = localStorage.getItem("token");
   const redirectToImage = async () => {
     try {
       const token =
@@ -137,11 +137,17 @@ export default function Order() {
       const agent = await axios({
         method: "GET",
         url: `http://localhost:8000/agent/${agentId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (agent.status === 200) {
         const res = await axios({
           method: "GET",
           url: `http://localhost:8000/orders/${agent?.data?.id}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (res.status === 200) {
           const orders = res?.data;
